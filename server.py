@@ -16,18 +16,34 @@ def index():
 
 @app.route('/speech-to-text', methods=['POST'])
 def speech_to_text_route():
-    return None
+    audio=request.data
+    text=speech_to_text(audio)
+    return text
 
 
 @app.route('/process-message', methods=['POST'])
 def process_prompt_route():
+    data = request.get_json()
+
+    user_message = data["userMessage"]
+    voice = data["voice"]
+
+    openai_response = openai_process_message(user_message)
+
+    speech = text_to_speech(openai_response, voice)
+
+    speech_base64 = base64.b64encode(speech).decode("utf-8")
+
     response = app.response_class(
-        response=json.dumps({"openaiResponseText": None, "openaiResponseSpeech": None}),
+        response=json.dumps({
+            "openaiResponseText": openai_response,
+            "openaiResponseSpeech": speech_base64
+        }),
         status=200,
         mimetype='application/json'
     )
+
     return response
 
-
 if __name__ == "__main__":
-    app.run(port=8000, host='0.0.0.0')
+    app.run(port=8000, host='0.0.0.0',debug=True)
