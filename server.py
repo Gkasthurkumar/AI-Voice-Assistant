@@ -1,49 +1,71 @@
-import base64
-import json
-from flask import Flask, render_template, request
-from worker import speech_to_text, text_to_speech, openai_process_message
-from flask_cors import CORS
 import os
+import json
+import base64
+
+from flask import Flask, render_template, request
+from flask_cors import CORS
+
+from worker import (
+    speech_to_text,
+    text_to_speech,
+    chat_with_llama
+)
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/speech-to-text', methods=['POST'])
+@app.route("/speech-to-text", methods=["POST"])
 def speech_to_text_route():
-    audio=request.data
-    text=speech_to_text(audio)
+
+    audio = request.data
+
+    os.makedirs("audio", exist_ok=True)
+
+    # Browser records WebM
+    audio_path = "audio/input.webm"
+
+    with open(audio_path, "wb") as f:
+        f.write(audio)
+
+    text = speech_to_text(audio_path)
+
     return text
 
 
-@app.route('/process-message', methods=['POST'])
+@app.route("/process-message", methods=["POST"])
 def process_prompt_route():
+
     data = request.get_json()
 
+    if not data or "userMessage" not in data:
+        return {"error": "userMessage missing"}, 400
+
     user_message = data["userMessage"]
-    voice = data["voice"]
 
-    openai_response = openai_process_message(user_message)
+    reply = chat_with_llama(user_message)
 
-    speech = text_to_speech(openai_response, voice)
+    audio_path = text_to_speech(reply)
 
-    speech_base64 = base64.b64encode(speech).decode("utf-8")
+    with open(audio_path, "rb") as audio_file:
+        speech_base64 = base64.b64encode(
+            audio_file.read()
+        ).decode("utf-8")
 
-    response = app.response_class(
-        response=json.dumps({
-            "openaiResponseText": openai_response,
-            "openaiResponseSpeech": speech_base64
-        }),
-        status=200,
-        mimetype='application/json'
-    )
+    return {
+        "openaiResponseText": reply,
+        "openaiResponseSpeech": speech_base64
+    }
 
-    return response
 
 if __name__ == "__main__":
-    app.run(port=8000, host='0.0.0.0',debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=8000,
+        debug=True
+    )
