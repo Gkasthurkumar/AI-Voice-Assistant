@@ -6,7 +6,6 @@ from flask import Flask, render_template, request
 from flask_cors import CORS
 
 from worker import (
-    speech_to_text,
     text_to_speech,
     chat_with_llama
 )
@@ -18,24 +17,6 @@ CORS(app)
 @app.route("/")
 def index():
     return render_template("index.html")
-
-
-@app.route("/speech-to-text", methods=["POST"])
-def speech_to_text_route():
-
-    audio = request.data
-
-    os.makedirs("audio", exist_ok=True)
-
-    # Browser records WebM
-    audio_path = "audio/input.webm"
-
-    with open(audio_path, "wb") as f:
-        f.write(audio)
-
-    text = speech_to_text(audio_path)
-
-    return text
 
 
 @app.route("/process-message", methods=["POST"])

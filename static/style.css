@@ -91,7 +91,6 @@ body {
 
 /* ---------------- Icons ---------------- */
 
-.microphone i,
 .send i,
 .volume i {
     color: #125ee5;
@@ -104,11 +103,6 @@ body {
     display: none;
     width: 70%;
     padding-bottom: 10px;
-}
-
-.loading-animation.my-loading {
-    width: 100%;
-    flex-direction: row-reverse;
 }
 
 .loading-dots {
@@ -125,16 +119,6 @@ body {
 
 .loading-dots.dark {
     background: #263443;
-}
-
-.loading-dots.my-loading {
-    background: #e7f9d8;
-    float: right;
-    transform: rotateY(180deg);
-}
-
-.loading-dots.my-loading.dark {
-    background: #0f4c9e;
 }
 
 /* ---------------- Dots ---------------- */

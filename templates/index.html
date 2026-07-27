@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI Voice Assistant</title>
+    <title>AI Chat Assistant</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet"
@@ -35,13 +35,12 @@
             <div class="col-12 mt-4">
 
                 <h1 class="text-center">
-                    AI Voice Assistant
+                    AI Chat Assistant
                 </h1>
 
                 <p class="text-center" style="font-size:20px;">
                     Your personal AI assistant powered by
                     <strong>Ollama (Llama 3)</strong>,
-                    <strong>Whisper</strong>,
                     <strong>Flask</strong>,
                     and
                     <strong>gTTS</strong>.
@@ -53,7 +52,7 @@
             <div class="col-12">
 
                 <p class="text-center mb-4">
-                    Ask anything by typing your question or clicking the microphone.
+                    Type your question below. Tap the speaker icon on a reply to hear it.
                 </p>
 
             </div>
@@ -87,19 +86,6 @@
 
                     <div id="message-list"></div>
 
-                    <!-- User Loading -->
-                    <div class="loading-animation my-loading">
-
-                        <div class="loading-dots my-loading">
-
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-
-                        </div>
-
-                    </div>
-
                     <!-- Bot Loading -->
                     <div class="loading-animation">
 
@@ -128,9 +114,9 @@
 
                         <button
                             id="send-button"
-                            class="btn btn-primary microphone">
+                            class="btn btn-primary send">
 
-                            <i class="fa fa-microphone"></i>
+                            <i class="fa fa-paper-plane"></i>
 
                         </button>
 

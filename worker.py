@@ -1,15 +1,6 @@
 import os
 import ollama
-import whisper
 from gtts import gTTS
-
-# Load Whisper model only once
-model = whisper.load_model("base")
-
-
-def speech_to_text(audio_path):
-    result = model.transcribe(audio_path)
-    return result["text"]
 
 
 def text_to_speech(text):
